@@ -1,20 +1,21 @@
 
-## 01. Mode in Binary Search Tree
+## 01. Find Mode in Binary Search Tree
 The problem can be found at the following link: [Question Link](https://leetcode.com/problems/find-mode-in-binary-search-tree)
 
 ![](https://badgen.net/badge/Level/Easy/green)
 
+
 ### My Approach
 
-This code finds the mode (most frequently occurring elements) in a Binary Search Tree (BST) using an in-order traversal approach. The following is a step-by-step explanation of how it works:
+This code finds the mode (most frequently occurring elements) in a Binary Search Tree (BST) using an in-order traversal approach. Here's a detailed explanation of how it works:
 
-1. **Initialization**: The code starts by defining an `inorder` function for in-order traversal of the BST. It takes parameters such as the current `root`, the previous node `prev`, the current count `cnt`, the maximum count `max_cnt` seen so far, and a list `result` to store mode values.
+1. **Initialization**: The code starts by defining the `inorder` function for in-order traversal of the BST. This function takes several parameters: `root` (current node), `prev` (previous node), `cnt` (count of consecutive elements), `max_cnt` (maximum count seen so far), and `result` (list to store mode values).
 
-2. **In-Order Traversal**: The `inorder` function recursively traverses the BST. The process includes the following steps:
-   - If the current node `root` is `None`, the function returns the values of `prev`, `cnt`, and `max_cnt`.
-   - The in-order traversal begins by calling `inorder` on the left child (recursion).
+2. **In-Order Traversal**: The `inorder` function recursively traverses the BST following these steps:
+   - If the current node `root` is `None`, it returns the values of `prev`, `cnt`, and `max_cnt`.
+   - The in-order traversal starts by calling `inorder` on the left child (recursion).
    - It checks if the value of the current node `root.val` is equal to the value of the previous node `prev.val`. If they are equal, it increments `cnt` to count consecutive occurrences of the same value. If they are different, it resets `cnt` to 1.
-   - It then compares the value of `cnt` to the value of `max_cnt`. If `cnt` is greater, it updates `max_cnt` to `cnt` and clears the `result` list. The current value `root.val` is appended to the `result`.
+   - It then compares the value of `cnt` to the value of `max_cnt`. If `cnt` is greater, it updates `max_cnt` to `cnt`, clears the `result` list, and appends the current value `root.val`.
    - If `cnt` is equal to `max_cnt`, it means another mode value is found, so the current value is appended to the `result` as well.
    - The function proceeds to the right child (recursion), updating `prev`, `cnt`, and `max_cnt` accordingly.
 
@@ -35,15 +36,31 @@ This code finds the mode (most frequently occurring elements) in a Binary Search
 ```python
 def findMode(root):
     def inorder(root, prev, cnt, max_cnt, result):
-        # Implementation of the inorder function
-        # ...
-        return result
+        if not root:
+            return prev, cnt, max_cnt
+        prev, cnt, max_cnt = inorder(root.left, prev, cnt, max_cnt, result)
+        if prev:
+            if root.val == prev.val:
+                cnt += 1
+            else:
+                cnt = 1
+        if cnt > max_cnt:
+            max_cnt = cnt
+            del result[:]
+            result.append(root.val)
+        elif cnt == max_cnt:
+            result.append(root.val)
+        return inorder(root.right, root, cnt, max_cnt, result)
+
     if not root:
         return []
     result = []
     inorder(root, None, 1, 0, result)
     return result
 ```
+
+
+
 
 ### Contribution and Support
 
